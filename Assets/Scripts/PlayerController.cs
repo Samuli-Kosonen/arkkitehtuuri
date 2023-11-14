@@ -139,8 +139,23 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        touchedPlate = other.gameObject.GetComponent<Plate>();
-        touchedPlate.ChangeColor();
+        if (other.gameObject.GetComponent<Plate>() != null)
+        {
+            touchedPlate = other.gameObject.GetComponent<Plate>();
+            touchedPlate.ChangeColor();
+        }
+        else if( other.gameObject.GetComponent<Coin>() != null)
+        {
+            Destroy(other.gameObject);
+        }
+    }
+
+    public void Die()
+    {
+        undoed.Clear();
+        commands.Clear();
+        transform.position = Vector3.zero;
+        pm.Restart();
     }
 
     private void OnDrawGizmos()

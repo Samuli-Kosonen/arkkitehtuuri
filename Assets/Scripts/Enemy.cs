@@ -5,11 +5,14 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public static event Action<Enemy> OnEnemyKill;
+    public static event Action OnEnemyKill;
 
-    public int value = -1;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<PlayerController>() != null) OnEnemyKill.Invoke(this);
+        if (other.GetComponent<PlayerController>() != null)
+        {
+            OnEnemyKill?.Invoke();
+            other.GetComponent<PlayerController>().Die();
+        }
     }
 }

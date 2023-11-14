@@ -996,6 +996,7 @@ GameObject:
   - component: {fileID: 1661961614}
   - component: {fileID: 1661961613}
   - component: {fileID: 1661961618}
+  - component: {fileID: 1661961619}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1135,6 +1136,18 @@ MonoBehaviour:
   waitTime: 1
   text: {fileID: 558069044}
   historyText: {fileID: 772436339}
+--- !u!114 &1661961619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661961612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 724167dd0ace5e64f88d96a225ce8a06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1709081144
 GameObject:
   m_ObjectHideFlags: 0
@@ -1299,6 +1312,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   plate: {fileID: 4335251600367393191, guid: e00a855d951a98641b1e5fe7c262d034, type: 3}
+  coin: {fileID: 3630484599490326863, guid: 38341cea4337e3e42a53140749b73a36, type: 3}
+  enemy: {fileID: 8214786915314472022, guid: 04146725e61418c4a8bb8fdfbfa63d90, type: 3}
+  maxCoinTimer: 3
+  maxEnemyTimer: 5
 --- !u!4 &1740270712
 Transform:
   m_ObjectHideFlags: 0

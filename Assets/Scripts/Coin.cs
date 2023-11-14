@@ -5,13 +5,10 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-    public static event Action<Coin> OnCoinCollected;
+    public static event Action OnCoinCollected;
 
-    public int coinValue = 1;
-
-    private void OnDisable()
+    private void OnDestroy()
     {
-        // Invoke registered methods
-        OnCoinCollected?.Invoke(this);
+        OnCoinCollected?.Invoke();
     }
 }
