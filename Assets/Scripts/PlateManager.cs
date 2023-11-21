@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlateManager : MonoBehaviour
 {
     List<GameObject> plates = new List<GameObject>();
+    List<Plate> colorPlates = new List<Plate>();
     public GameObject plate;
     public GameObject coin;
     public GameObject enemy;
@@ -12,6 +13,7 @@ public class PlateManager : MonoBehaviour
     public float maxEnemyTimer = 5f;
     private float coinTimer;
     private float enemyTimer;
+    int index = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +25,8 @@ public class PlateManager : MonoBehaviour
             for(int j = 0; j < 25; j++)
             {
                 GameObject newPlate = Instantiate(plate);
+                newPlate.GetComponent<Plate>().index = index;
+                index++;
                 plate.transform.position = new Vector3(-24 + i + i, -2.5f, -24 + j +j);
                 newPlate.transform.parent = gameObject.transform;
                 plates.Add(newPlate);
@@ -37,13 +41,29 @@ public class PlateManager : MonoBehaviour
 
         if(coinTimer <= 0)
         {
-            plates[Random.Range(1, plates.Count)].GetComponent<Plate>().AddObj(coin);
+            int random = Random.Range(1, plates.Count);
+            if(random != 313)plates[random].GetComponent<Plate>().AddObj(coin);
             coinTimer = maxCoinTimer;
         }
         if(enemyTimer <= 0)
         {
-            plates[Random.Range(1, plates.Count)].GetComponent<Plate>().AddObj(enemy);
+            Plate curPlate;
+            int random = Random.Range(1, plates.Count);
+            if (random != 313) curPlate = plates[random].GetComponent<Plate>();
+            if (!curPlate.colored) curPlate.AddObj(enemy);
             enemyTimer = maxEnemyTimer;
+        }
+    }
+
+    public void UpdateGame(int coinAmount)
+    {
+        //colorPlates.Clear();
+
+        foreach (GameObject plate in plates)
+        {
+            Plate curPlate = plate.gameObject.GetComponent<Plate>();
+
+            if (curPlate != null && curPlate.colored) curPlate.UpdateGame(coinAmount);
         }
     }
 

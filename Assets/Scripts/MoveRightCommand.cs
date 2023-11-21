@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MoveRightCommand : Command
 {
-    string name = " Right ";
+    string name = " R ";
     public override void Execute(Rigidbody rb)
     {
         rb.transform.position += 2* rb.transform.right;

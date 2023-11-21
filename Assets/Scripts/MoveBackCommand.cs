@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MoveBackCommand : Command
 {
-    string name = " Down ";
+    string name = " D ";
 
     public override void Execute(Rigidbody rb)
     {

@@ -63,6 +63,7 @@
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\MoveBackCommand.cs" />
     <Compile Include="Assets\Scripts\MoveUpCommand.cs" />
+    <Compile Include="Assets\Scripts\Spawner.cs" />
     <Compile Include="Assets\Scripts\PlateManager.cs" />
     <Compile Include="Assets\Scripts\MoveRightCommand.cs" />
     <Compile Include="Assets\Scripts\Plate.cs" />

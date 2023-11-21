@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MoveForwardCommand : Command
 {
-    string name = " Up ";
+    string name = " U ";
 
     public override void Execute(Rigidbody rb)
     {

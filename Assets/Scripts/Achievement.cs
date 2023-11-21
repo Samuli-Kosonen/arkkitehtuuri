@@ -1,9 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Achievement : MonoBehaviour
 {
+    public TextMeshProUGUI score;
+    public TextMeshProUGUI highScore;
+    int highscoreNum = 0;
+
     private const int nAchievements = 3;
     public enum Achievement_ID
     {
@@ -16,7 +21,7 @@ public class Achievement : MonoBehaviour
     private bool[] bUnlockedAchievements = new bool[nAchievements];
 
 
-    private int nCoins = 0;
+    public int nCoins = 0;
     int nDeaths = 0;
 
     private void Start()
@@ -26,9 +31,17 @@ public class Achievement : MonoBehaviour
         Enemy.OnEnemyKill += EnemyKilledPlayer;
     }
 
+    private void Update()
+    {
+        score.text = "Score: " + nCoins.ToString();
+        if(highscoreNum < nCoins) highscoreNum = nCoins;
+
+        highScore.text = "Highscore: " + highscoreNum.ToString();
+    }
     void CoinWasCollected()
     {
         nCoins++;
+
         if (nCoins == 5)
         {
             int index = (int)Achievement_ID.Coin_Collector;

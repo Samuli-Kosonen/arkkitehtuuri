@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     PlateManager pm;
     Rigidbody rb;
+    Achievement ac;
     [SerializeField] float jumpForce = 10f;
     [SerializeField] float force = 5;
     [SerializeField] float waitTime = 1;
@@ -23,6 +24,8 @@ public class PlayerController : MonoBehaviour
     Command cmd_A = new MoveLeftCommand();
     Command cmd_D = new MoveRightCommand();
 
+    Command lastCommand;
+
     // Stacks
     Stack<Command> commands = new Stack<Command>();
     Stack<Command> undoed = new Stack<Command>();
@@ -30,9 +33,10 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Get Rigidbody & plate manager
+        // Get Rigidbody & plate manager & achivement
         rb = GetComponent<Rigidbody>();
         pm = FindObjectOfType<PlateManager>();
+        ac = FindObjectOfType<Achievement>();
     }
 
     // Update is called once per frame
@@ -63,29 +67,37 @@ public class PlayerController : MonoBehaviour
         waitTime -= Time.deltaTime;
 
         Rigidbody rb = GetComponent<Rigidbody>();
-        if (Input.GetKeyDown(KeyCode.A)) // Left action
+        if (Input.GetKeyDown(KeyCode.A) && lastCommand != cmd_D) // Left action
         {
             undoed.Clear();
             cmd_A.Execute(rb);
             commands.Push(cmd_A);
+            UpdateGame(ac.nCoins);
+            lastCommand = cmd_A;
         }
-        else if (Input.GetKeyDown(KeyCode.D)) // Right action
+        else if (Input.GetKeyDown(KeyCode.D) && lastCommand != cmd_A) // Right action
         {
             undoed.Clear();
             cmd_D.Execute(rb);
             commands.Push(cmd_D);
+            UpdateGame(ac.nCoins);
+            lastCommand = cmd_D;
         }
-        else if (Input.GetKeyDown(KeyCode.W)) // Up action
+        else if (Input.GetKeyDown(KeyCode.W) && lastCommand != cmd_S) // Up action
         {
             undoed.Clear();
             cmd_W.Execute(rb);
             commands.Push(cmd_W);
+            UpdateGame(ac.nCoins);
+            lastCommand = cmd_W;
         }
-        else if (Input.GetKeyDown(KeyCode.S)) // Down action
+        else if (Input.GetKeyDown(KeyCode.S) && lastCommand != cmd_W) // Down action
         {
             undoed.Clear();
             cmd_S.Execute(rb);
             commands.Push(cmd_S);
+            UpdateGame(ac.nCoins);
+            lastCommand = cmd_S;
         }
         else if (Input.GetKeyDown(KeyCode.Space) && waitTime < 0) // Jump action
         {
@@ -117,10 +129,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.R)) // Reset
         {
-            undoed.Clear();
-            commands.Clear();
-            transform.position = Vector3.zero;
-            pm.Restart();
+            Restart();
         }
         
         IEnumerator Replay()
@@ -137,12 +146,30 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    private void Restart()
+    {
+        undoed.Clear();
+        commands.Clear();
+        transform.position = Vector3.zero;
+        pm.Restart();
+        ac.nCoins = 0;
+    }
+
+    public void UpdateGame(int coinAmount)
+    {
+        pm.UpdateGame(coinAmount);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.GetComponent<Plate>() != null)
         {
             touchedPlate = other.gameObject.GetComponent<Plate>();
-            touchedPlate.ChangeColor();
+            if(touchedPlate != null && touchedPlate.colored) 
+            {
+                Restart();
+            }
+            else touchedPlate.ChangeColor();
         }
         else if( other.gameObject.GetComponent<Coin>() != null)
         {
@@ -152,10 +179,7 @@ public class PlayerController : MonoBehaviour
 
     public void Die()
     {
-        undoed.Clear();
-        commands.Clear();
-        transform.position = Vector3.zero;
-        pm.Restart();
+        Restart();
     }
 
     private void OnDrawGizmos()
