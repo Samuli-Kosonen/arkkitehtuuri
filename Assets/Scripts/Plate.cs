@@ -8,6 +8,8 @@ public class Plate : MonoBehaviour
     public Material red;
     public Material normal;
     public int index;
+    public int x;
+    public int y;
     int maxLifetime = -1;
     int curLifetime;
 

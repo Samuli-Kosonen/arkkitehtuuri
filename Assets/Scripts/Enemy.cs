@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
         if (other.GetComponent<PlayerController>() != null)
         {
             PlayerController player = other.GetComponent<PlayerController>();
-            if(player.currentState == PlayerController.State.PowerUp)
+            if(player.currentPS == PlayerController.PowerState.PowerUp)
             {
                 Destroy(gameObject);
             }

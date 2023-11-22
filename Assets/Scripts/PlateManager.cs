@@ -14,21 +14,39 @@ public class PlateManager : MonoBehaviour
     private float coinTimer;
     private float enemyTimer;
     int index = 0;
+
+    int height = 25;
+    int width = 25;
+    public Plate[,] platArr = new Plate[25,25];
     // Start is called before the first frame update
     void Start()
     {
         coinTimer = maxCoinTimer;
         enemyTimer = maxEnemyTimer;
 
-        for (int i = 0; i < 25; i++)
+        for (int i = 0; i < height; i++)
         {
-            for(int j = 0; j < 25; j++)
+            for(int j = 0; j < width; j++)
             {
+                // Insantiate plate and get reference
                 GameObject newPlate = Instantiate(plate);
+                platArr[i, j] = newPlate.GetComponent<Plate>();
+                newPlate.GetComponent<Plate>().x = i;
+                newPlate.GetComponent<Plate>().y = j;
+
+                // Set plates index
                 newPlate.GetComponent<Plate>().index = index;
+
+                // Store raise index
                 index++;
+
+                // Set plate on correct position
                 plate.transform.position = new Vector3(-24 + i + i, -2.5f, -24 + j +j);
+
+                // Set plate as a child of this manager
                 newPlate.transform.parent = gameObject.transform;
+
+                // Add it to the list of plates
                 plates.Add(newPlate);
             }
         }
@@ -42,16 +60,18 @@ public class PlateManager : MonoBehaviour
         if(coinTimer <= 0)
         {
             int random = Random.Range(1, plates.Count);
-            if(random != 313)plates[random].GetComponent<Plate>().AddObj(coin);
+            if (random == 313 || plates[random].GetComponent<Plate>().colored) return;
+
+            plates[random].GetComponent<Plate>().AddObj(coin);
             coinTimer = maxCoinTimer;
         }
         if(enemyTimer <= 0)
         {
-            Plate curPlate;
+            
             int random = Random.Range(1, plates.Count);
-            if (random != 313) curPlate = plates[random].GetComponent<Plate>();
-            else curPlate = plates[0].gameObject.GetComponent<Plate>();
-            if (!curPlate.colored) curPlate.AddObj(enemy);
+            if (random == 313 || plates[random].GetComponent<Plate>().colored) return;
+
+            plates[random].GetComponent<Plate>().AddObj(enemy);
             enemyTimer = maxEnemyTimer;
         }
     }
