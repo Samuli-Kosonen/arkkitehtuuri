@@ -50,6 +50,7 @@ public class PlateManager : MonoBehaviour
             Plate curPlate;
             int random = Random.Range(1, plates.Count);
             if (random != 313) curPlate = plates[random].GetComponent<Plate>();
+            else curPlate = plates[0].gameObject.GetComponent<Plate>();
             if (!curPlate.colored) curPlate.AddObj(enemy);
             enemyTimer = maxEnemyTimer;
         }

@@ -15,8 +15,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float waitTime = 1;
     public TextMeshProUGUI text;
     public TextMeshProUGUI historyText;
+    public TextMeshProUGUI stateText;
+    public Transform model;
     bool replaying;
     Plate touchedPlate;
+
+    public Material defaultMat;
+    public Material powerupMat;
 
     // Commands
     Command cmd_W = new MoveForwardCommand();
@@ -29,6 +34,15 @@ public class PlayerController : MonoBehaviour
     // Stacks
     Stack<Command> commands = new Stack<Command>();
     Stack<Command> undoed = new Stack<Command>();
+
+    public enum State
+    {
+        Standing,
+        Jumping,
+        Crouching,
+        PowerUp
+    }
+    public State currentState = State.Standing;
 
     // Start is called before the first frame update
     void Start()
@@ -64,7 +78,9 @@ public class PlayerController : MonoBehaviour
 
         if (replaying) return;
         // Wait time for jump
-        waitTime -= Time.deltaTime;
+        if (waitTime >= -1) waitTime -= Time.deltaTime;
+
+        if (waitTime < 0 && currentState != State.Crouching) currentState = State.Standing;
 
         Rigidbody rb = GetComponent<Rigidbody>();
         if (Input.GetKeyDown(KeyCode.A) && lastCommand != cmd_D) // Left action
@@ -99,10 +115,22 @@ public class PlayerController : MonoBehaviour
             UpdateGame(ac.nCoins);
             lastCommand = cmd_S;
         }
-        else if (Input.GetKeyDown(KeyCode.Space) && waitTime < 0) // Jump action
+        else if (Input.GetKeyDown(KeyCode.Space) && waitTime < 0 && currentState != State.Crouching) // Jump action
         {
+            currentState = State.Jumping;
             rb.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
             waitTime = 1;
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            if (currentState == State.Crouching) //Uncrouch
+            {
+                currentState = State.Standing;
+            }
+            else if (currentState == State.Standing) //Crouch
+            {
+                currentState = State.Crouching;
+            }
         }
         else if (Input.GetKeyDown(KeyCode.Z)) // Undo action
         {
@@ -143,7 +171,36 @@ public class PlayerController : MonoBehaviour
             }
             replaying = false;
         }
-        
+
+        stateText.text = "Current state: " + currentState.ToString();
+
+        switch (currentState)
+        {
+            case State.Standing:
+                model.localScale = Vector3.one;
+                model.localPosition = Vector3.zero;
+                model.gameObject.GetComponent<MeshRenderer>().material = defaultMat;
+                break;
+
+            case State.Jumping:
+                model.localScale = new Vector3(1,0.33f,1);
+
+                break;
+
+            case State.Crouching: 
+                model.localScale = new Vector3(1, 0.33f, 1);
+                model.localPosition = new Vector3(0, -0.7f, 0);
+
+                break;
+
+            case State.PowerUp:
+                model.gameObject.GetComponent<MeshRenderer>().material = powerupMat;
+
+                break;
+
+            default: 
+                break;
+        }
     }
 
     private void Restart()
@@ -173,6 +230,8 @@ public class PlayerController : MonoBehaviour
         }
         else if( other.gameObject.GetComponent<Coin>() != null)
         {
+            currentState = State.PowerUp;
+            waitTime = 2;
             Destroy(other.gameObject);
         }
     }

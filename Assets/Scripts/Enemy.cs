@@ -11,8 +11,16 @@ public class Enemy : MonoBehaviour
     {
         if (other.GetComponent<PlayerController>() != null)
         {
-            OnEnemyKill?.Invoke();
-            other.GetComponent<PlayerController>().Die();
+            PlayerController player = other.GetComponent<PlayerController>();
+            if(player.currentState == PlayerController.State.PowerUp)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                OnEnemyKill?.Invoke();
+                player.Die();
+            }
         }
     }
 }
