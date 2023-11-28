@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 
 public class PlateManager : MonoBehaviour
@@ -9,15 +10,23 @@ public class PlateManager : MonoBehaviour
     public GameObject plate;
     public GameObject coin;
     public GameObject enemy;
+    public GameObject playerPrefab;
     public float maxCoinTimer = 3f;
     public float maxEnemyTimer = 5f;
     private float coinTimer;
     private float enemyTimer;
+    bool game=false;
     int index = 0;
+    float timer = 2f;
 
     int height = 25;
     int width = 25;
     public Plate[,] platArr = new Plate[25,25];
+    public Plate[,] nextPlatArr = new Plate[25,25];
+
+    bool[,] grid = new bool[25, 25];
+    bool[,] nextGrid = new bool[25, 25];
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,12 +39,18 @@ public class PlateManager : MonoBehaviour
             {
                 // Insantiate plate and get reference
                 GameObject newPlate = Instantiate(plate);
-                platArr[i, j] = newPlate.GetComponent<Plate>();
-                newPlate.GetComponent<Plate>().x = i;
-                newPlate.GetComponent<Plate>().y = j;
+                Plate Plate = newPlate.GetComponent<Plate>();
+                Plate.x = i;
+                Plate.y = j -1;
+
+                if (Plate.y == -1)
+                {
+                    Plate.y = 24;
+                    Plate.x -= 1;
+                }
 
                 // Set plates index
-                newPlate.GetComponent<Plate>().index = index;
+                Plate.index = index;
 
                 // Store raise index
                 index++;
@@ -48,14 +63,39 @@ public class PlateManager : MonoBehaviour
 
                 // Add it to the list of plates
                 plates.Add(newPlate);
+
+                if (Plate.index == 0)
+                {
+                    Plate.x = 24;
+                    Plate.y = 24;
+                }
+
+                platArr[Plate.x, Plate.y] = Plate;
             }
         }
+
+        platArr[2, 2].ChangeColor();
+        platArr[1, 2].ChangeColor();
+        platArr[0, 2].ChangeColor();
+
+
+        Debug.Log(platArr[1,1].index + " " + platArr[1, 1].x + platArr[1, 1].y);
     }
 
     private void Update()
     {
-        coinTimer -= Time.deltaTime;
-        enemyTimer -= Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            Instantiate(playerPrefab);
+            game = true;
+        }
+
+        if (game)
+        {
+            coinTimer -= Time.deltaTime;
+            enemyTimer -= Time.deltaTime;
+        }
 
         if(coinTimer <= 0)
         {
@@ -75,6 +115,8 @@ public class PlateManager : MonoBehaviour
             enemyTimer = maxEnemyTimer;
         }
     }
+
+
 
     public void UpdateGame(int coinAmount)
     {
