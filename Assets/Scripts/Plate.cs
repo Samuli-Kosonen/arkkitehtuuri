@@ -26,10 +26,6 @@ public class Plate : MonoBehaviour
         pm = GetComponentInParent<PlateManager>();
     }
 
-    private void Update()
-    {
-        aliveN = GetAliveNeighborCount();
-    }
 
     public void ChangeColor()
     {
@@ -75,50 +71,4 @@ public class Plate : MonoBehaviour
         }
     }
 
-    public void UpdateGOL()
-    {
-        /*Rules:
-1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.
-2. Any live cell with two or three live neighbours lives on to the next generation.
-3. Any live cell with more than three live neighbours dies, as if by overpopulation.
-4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction
-*/
-
-        if (colored) //Alive
-        {
-            if(aliveN < 2) Restart();
-            else if(aliveN > 3) Restart();
-        }
-        else //Dead
-        {
-            if (aliveN == 3) ChangeColor();
-        }
-    }
-
-    int GetAliveNeighborCount()
-    {
-        int count = 0;
-        int[] dx = { -1, 0, 1, 0 };
-        int[] dy = { 0, 1, 0, -1 };
-
-
-        for (int i = 0; i < 4; i++)
-        {
-            int nx = x + dx[i];
-            int ny = y + dy[i];
-
-            // Check if the neighbor is within the grid
-            if (nx >= 0 && nx <= 24 && ny >= 0 && ny <= 24)
-            {
-                // Check if the neighbor is colored
-                if (pm.platArr[nx, ny].colored)
-                {
-                    count++;
-                }
-            }
-        }
-
-
-        return count;
-    }
 }

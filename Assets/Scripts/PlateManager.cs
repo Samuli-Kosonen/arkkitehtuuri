@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlateManager : MonoBehaviour
 {
+
     List<GameObject> plates = new List<GameObject>();
     List<Plate> colorPlates = new List<Plate>();
     public GameObject plate;
@@ -21,11 +22,7 @@ public class PlateManager : MonoBehaviour
 
     int height = 25;
     int width = 25;
-    public Plate[,] platArr = new Plate[25,25];
-    public Plate[,] nextPlatArr = new Plate[25,25];
 
-    bool[,] grid = new bool[25, 25];
-    bool[,] nextGrid = new bool[25, 25];
 
     // Start is called before the first frame update
     void Start()
@@ -63,23 +60,8 @@ public class PlateManager : MonoBehaviour
 
                 // Add it to the list of plates
                 plates.Add(newPlate);
-
-                if (Plate.index == 0)
-                {
-                    Plate.x = 24;
-                    Plate.y = 24;
-                }
-
-                platArr[Plate.x, Plate.y] = Plate;
             }
         }
-
-        platArr[2, 2].ChangeColor();
-        platArr[1, 2].ChangeColor();
-        platArr[0, 2].ChangeColor();
-
-
-        Debug.Log(platArr[1,1].index + " " + platArr[1, 1].x + platArr[1, 1].y);
     }
 
     private void Update()
@@ -97,7 +79,7 @@ public class PlateManager : MonoBehaviour
             enemyTimer -= Time.deltaTime;
         }
 
-        if(coinTimer <= 0)
+        if (coinTimer <= 0)
         {
             int random = Random.Range(1, plates.Count);
             if (random == 313 || plates[random].GetComponent<Plate>().colored) return;
@@ -105,9 +87,9 @@ public class PlateManager : MonoBehaviour
             plates[random].GetComponent<Plate>().AddObj(coin);
             coinTimer = maxCoinTimer;
         }
-        if(enemyTimer <= 0)
+        if (enemyTimer <= 0)
         {
-            
+
             int random = Random.Range(1, plates.Count);
             if (random == 313 || plates[random].GetComponent<Plate>().colored) return;
 
@@ -115,9 +97,6 @@ public class PlateManager : MonoBehaviour
             enemyTimer = maxEnemyTimer;
         }
     }
-
-
-
     public void UpdateGame(int coinAmount)
     {
         //colorPlates.Clear();
@@ -137,4 +116,5 @@ public class PlateManager : MonoBehaviour
             plate.GetComponent<Plate>().Restart();
         }
     }
+
 }
