@@ -363,9 +363,11 @@
 "Assets/Scripts/MoveLeftCommand.cs"
 "Assets/Scripts/MoveRightCommand.cs"
 "Assets/Scripts/MoveUpCommand.cs"
+"Assets/Scripts/PathFindingGrid.cs"
 "Assets/Scripts/Plate.cs"
 "Assets/Scripts/PlateManager.cs"
 "Assets/Scripts/PlayerController.cs"
+"Assets/Scripts/Tile.cs"
 -langversion:9.0
 
 /deterministic
